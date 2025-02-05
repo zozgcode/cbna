@@ -191,16 +191,16 @@ export const mockAccounts: Account[] = [
         amount_usd: -4850.00
       },
       {
+        dateTime: 'February 2, 2025',
+        description: 'Debit from United airlines',
+        status: 'Success',
+        amount_usd: -1800.00
+      },
+      {
         dateTime: 'January 28, 2025',
         description: 'Withdrawal from R&B trading',
         status: 'Success',
         amount_usd: 850050.17
-      },
-      {
-        dateTime: 'January 28, 2025',
-        description: 'Transfer to United airlines',
-        status: 'Success',
-        amount_usd: -1800.00
       },
       {
         dateTime: 'January 26, 2025',
@@ -210,7 +210,7 @@ export const mockAccounts: Account[] = [
       },
       {
         dateTime: 'December 29, 2024',
-        description: 'Credit from Walmart',
+        description: 'Debit from Walmart',
         status: 'Success',
         amount_usd: -1200.00
       },
