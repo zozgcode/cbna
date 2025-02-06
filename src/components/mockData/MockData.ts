@@ -144,7 +144,7 @@ export const mockAccounts: Account[] = [
     transaction_mgs_code: {
       transaction_text_msg: 'To continue this transaction, please enter the code sent to you',
       transaction_code: '',
-      lastStepText: 'Your account is on hold. You cannot make transactions right now. Please contact our customer service team for assistance',
+      lastStepText: 'Transaction sent successfully!',
       wireDate: true
     },
     transaction_history: [
