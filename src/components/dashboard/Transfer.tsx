@@ -18,6 +18,8 @@ interface Bks {
 
 interface FormErrors {
   routingNumber?: string;
+  accountNumber?: string;
+  accountName?: string;
   selectedBank?: string;
   amount?: string;
   transCode?: string;
@@ -29,6 +31,8 @@ export default function Transfer() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     routingNumber: '',
+    accountNumber: '',
+    accountName: '',
     selectedBank: null as Bks | null,
     amount: '',
     remark: '',
@@ -105,22 +109,41 @@ export default function Transfer() {
 
   const validateForm = () => {
     const errors: FormErrors = {};
+
     if (step === 1) {
-      if (!formData.routingNumber) {
-        errors.routingNumber = 'Routing number is required';
-      } else if (formData.routingNumber.length !== 9) {
-        errors.routingNumber = 'Routing number must be 9 digits';
+      if (step === 1) {
+        if (!formData.selectedBank) {
+          errors.selectedBank = 'Bank selection is required';
+        }
+
+        if (user?.bank_details.account_number || user?.bank_details.account_name) {
+          if (!formData.accountNumber) {
+            errors.accountNumber = 'Account number is required';
+          } else if (formData.accountNumber && (formData.accountNumber.length < 8 || formData.accountNumber.length > 12)) {
+            errors.accountNumber = 'Account number must be between 8 and 12 digits';
+          }
+
+          if (!formData.accountName) {
+            errors.accountName = 'Account name is required';
+          }
+        } else {
+          if (!formData.routingNumber) {
+            errors.routingNumber = 'Routing number is required';
+          } else if (formData.routingNumber.length !== 9) {
+            errors.routingNumber = 'Routing number must be 9 digits';
+          }
+        }
       }
-      if (!formData.selectedBank) errors.selectedBank = 'Bank selection is required';
     } else if (step === 2) {
-      if (!formData.amount) errors.amount = 'Amount is required';
+      if (!formData.amount) {
+        errors.amount = 'Amount is required';
+      }
     } else if (step === 3) {
-      // Only validate transaction code if it exists
       if (user?.transaction_mgs_code.transaction_code && formData.transCode !== user.transaction_mgs_code.transaction_code) {
         errors.transCode = 'Incorrect transaction code';
       }
-      // if (formData.transCode !== generatedCode) errors.transCode = "Incorrect transaction code";
     }
+
     return errors;
   };
 
@@ -136,24 +159,57 @@ export default function Transfer() {
             <div>
               <h2 className="text-[#2e2e2e] text-lg font-semibold mb-4">Recipient Account</h2>
               <div className="">
-                <input
-                  type="number"
-                  name="routingNumber"
-                  value={formData.routingNumber}
-                  onChange={handleChange}
-                  placeholder="Routing Number"
-                  required
-                  className="w-full p-3 my-2 mb-2 min-h-[60px] bg-[#f8f8f8] rounded-lg border-none text-[#2e2e2e] focus:outline-none"
-                />
-                {errors.routingNumber && <p className="text-red-500 text-sm">{errors.routingNumber}</p>}
+                {user.bank_details.account_name && (
+                  <>
+                    <input
+                      type="text"
+                      name="accountName"
+                      value={formData.accountName}
+                      onChange={handleChange}
+                      placeholder="Account Name"
+                      required
+                      className="w-full p-3 my-2 mb-2 min-h-[60px] bg-[#f8f8f8] rounded-lg border-none text-[#2e2e2e] focus:outline-none"
+                    />
+                    {errors.accountName && <p className="text-red-500 text-sm">{errors.accountName}</p>}
+                  </>
+                )}
+
+                {user.bank_details.account_number ? (
+                  <>
+                    <input
+                      type="number"
+                      name="accountNumber"
+                      value={formData.accountNumber}
+                      onChange={handleChange}
+                      placeholder="Account Number"
+                      required
+                      className="w-full p-3 my-2 mb-2 min-h-[60px] bg-[#f8f8f8] rounded-lg border-none text-[#2e2e2e] focus:outline-none"
+                    />
+                    {errors.accountNumber && <p className="text-red-500 text-sm">{errors.accountNumber}</p>}
+                  </>
+                ) : (
+                  <>
+                    <input
+                      type="number"
+                      name="routingNumber"
+                      value={formData.routingNumber}
+                      onChange={handleChange}
+                      placeholder="Routing Number"
+                      required
+                      className="w-full p-3 my-2 mb-2 min-h-[60px] bg-[#f8f8f8] rounded-lg border-none text-[#2e2e2e] focus:outline-none"
+                    />
+                    {errors.routingNumber && <p className="text-red-500 text-sm">{errors.routingNumber}</p>}
+                  </>
+                )}
+
                 <SelectBks selectedBank={formData.selectedBank} setSelectedBank={bks => setFormData({ ...formData, selectedBank: bks })} />
                 {errors.selectedBank && <p className="text-red-500 text-sm">{errors.selectedBank}</p>}
               </div>
               <div className="flex items-center justify-between gap-20">
-                <Link href="/dashboard" className="max-w-max flex items-center justify-center rounded-full mt-4 px-4 min-h-[50px] text-xl bg-[#CB4A20] text-white">
+                <Link href="/dashboard" className="max-w-max flex items-center justify-center rounded-full mt-4 px-4 min-h-[50px] text-xl bg-[#d71e28] text-white">
                   Cancel
                 </Link>
-                <button type="button" className="w-full rounded-full mt-4 px-4 min-h-[50px] text-xl bg-[#CB4A20] text-white" onClick={handleNext}>
+                <button type="button" className="w-full rounded-full mt-4 px-4 min-h-[50px] text-xl bg-[#d71e28] text-white" onClick={handleNext}>
                   Next
                 </button>
               </div>
@@ -165,7 +221,7 @@ export default function Transfer() {
               <div className="mb-3">
                 <span className="">Transfer From</span>
                 <div className="flex gap-2 mt-2">
-                  <div className="rounded-lg flex items-center justify-center w-[35px] h-[35px] bg-[#CB4A20] text-white">WF</div>
+                  <div className="rounded-lg flex items-center justify-center w-[35px] h-[35px] bg-[#d71e28] text-white">WF</div>
                   <div className="flex flex-col gap-1">
                     <span className="uppercase">
                       {user.holder.firstName} {user.holder.lastName}
@@ -204,10 +260,10 @@ export default function Transfer() {
                 />
               </div>
               <div className="flex items-center justify-between gap-20">
-                <Link href="/dashboard" className="max-w-max flex items-center justify-center rounded-full mt-4 px-4 min-h-[50px] text-xl bg-[#CB4A20] text-white">
+                <Link href="/dashboard" className="max-w-max flex items-center justify-center rounded-full mt-4 px-4 min-h-[50px] text-xl bg-[#d71e28] text-white">
                   Cancel
                 </Link>
-                <button type="button" className="w-full rounded-full mt-4 px-4 min-h-[50px] text-xl bg-[#CB4A20] text-white" onClick={handleNext}>
+                <button type="button" className="w-full rounded-full mt-4 px-4 min-h-[50px] text-xl bg-[#d71e28] text-white" onClick={handleNext}>
                   Proceed
                 </button>
               </div>
@@ -218,7 +274,7 @@ export default function Transfer() {
             <div>
               <p className="text-[14px] text-center text-zinc-700">
                 You are about to transfer {formatCurrency(Number(formData.amount))} to&nbsp;
-                <span className="uppercase font-[600]">{formData.selectedBank?.name}</span>
+                <span className="uppercase font-[600]">{formData.accountName ? formData.accountName : formData.selectedBank?.name}</span>
                 &nbsp;from your&nbsp;
                 <span className="font-[500]">CHECKING ACCOUNT</span>
                 <br />
@@ -243,10 +299,10 @@ export default function Transfer() {
               )}
 
               <div className="flex items-center justify-between gap-20">
-                <Link href="/dashboard" className="max-w-max flex items-center justify-center rounded-full mt-4 px-4 min-h-[50px] text-xl bg-[#CB4A20] text-white">
+                <Link href="/dashboard" className="max-w-max flex items-center justify-center rounded-full mt-4 px-4 min-h-[50px] text-xl bg-[#d71e28] text-white">
                   Cancel
                 </Link>
-                <button type="submit" className="w-full rounded-full mt-4 px-4 min-h-[50px] text-xl bg-[#CB4A20] text-white">
+                <button type="submit" className="w-full rounded-full mt-4 px-4 min-h-[50px] text-xl bg-[#d71e28] text-white">
                   {loading ? 'Loading...' : 'Transfer'}
                 </button>
               </div>

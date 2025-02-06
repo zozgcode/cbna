@@ -69,14 +69,14 @@ const SelectBks: React.FC<SelectBksProps> = ({
 
       <div className={`fixed z-20 w-full top-0 right-0 left-0 ${ isModalOpen ? "block" : "hidden" }`} >
         <div className="bg-white rounded shadow-lg w-full h-screen">
-          <div className="bg-[#CB4A20] text-[#ffffff] sticky top-0 z-10 p-3 py-5 flex items-center justify-between gap-1">
+          <div className="bg-[#d71e28] text-[#ffffff] sticky top-0 z-10 p-3 py-5 flex items-center justify-between gap-1">
             <div className="flex items-center gap-2">
               <IoClose className="relative text-xl top-[1px]" onClick={handleCloseModal} />
               <span className="font-semibold">Select Bank</span>
             </div>
           </div>
           <div className="relative p-4">
-            <FiSearch className="absolute text-[#CB4A20] text-2xl left-[28px] top-[42px]" />
+            <FiSearch className="absolute text-[#d71e28] text-2xl left-[28px] top-[42px]" />
             <input
               type="text"
               placeholder="Search Bank Name"
@@ -92,7 +92,7 @@ const SelectBks: React.FC<SelectBksProps> = ({
                     handleSelectBank(bks);
                     handleCloseModal();
                   }}
-                  className="flex px-4 gap-2 items-center p-2 cursor-pointer hover:bg-[#CB4A20]/10"
+                  className="flex px-4 gap-2 items-center p-2 cursor-pointer hover:bg-[#d71e28]/10"
                 >
                   <div className="w-[60px] h-[50px] rounded-full flex items-center justify-center border">
                     <Image

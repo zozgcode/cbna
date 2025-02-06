@@ -15,7 +15,7 @@ export default function Footer() {
           <Link
             href={link.slug}
             key={i}
-            className={`flex flex-col items-center gap-1 ${pathname === link.slug ? "text-[#CB4A20]" : "text-zinc-600"}`}
+            className={`flex flex-col items-center gap-1 ${pathname === link.slug ? "text-[#d71e28]" : "text-zinc-600"}`}
           >
             <span className="text-xl">{link.icon}</span>
             <span className="text-[13px]">{link.label}</span>

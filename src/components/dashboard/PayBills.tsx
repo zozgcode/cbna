@@ -49,7 +49,7 @@ export default function PayBills() {
           {billsData.map((item, i) => (
             <div key={i} className="flex px-4 border-b border-x-0 border-white hover:bg-red-500/10 w-full justify-between items-center py-3" onClick={toggleShowMsg} >
               <div className="flex items-center gap-3">
-                <div className="rounded-lg flex items-center justify-center w-[35px] h-[35px] bg-[#CB4A20]/10">
+                <div className="rounded-lg flex items-center justify-center w-[35px] h-[35px] bg-[#d71e28]/10">
                   {item.icon}
                 </div>
                 <span className="text-sm">{item.title}</span>
